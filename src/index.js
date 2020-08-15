@@ -4,7 +4,7 @@ import "./index.css";
 import HeaderPanel from "./components/HeaderPanel";
 import { Provider } from "react-redux";
 import Users from "./containers/Users";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import store from "./store";
 
 const App = () => {
@@ -14,9 +14,9 @@ const App = () => {
       <Router>
         <Switch>
           <Route exact path="/">
-            <Redirect to="/page/0" />
-          </Route>
-          <Route path="/page/:page" >
+            <Users />
+          </Route> 
+          <Route path="/page/:page">
             <Users />
           </Route>
         </Switch>

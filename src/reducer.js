@@ -2,15 +2,18 @@ import { GET_USERS } from "./actionTypes";
 
 const initialState = {
   users: [],
+  numberOfPage: 0,
 };
 
-function Reducer(state = initialState, action) {
+function addReducer(state = initialState, action) {
   switch (action.type) {
     case GET_USERS:
-      return action.payload;
+      return (
+        action.payload
+      );
     default:
       return state;
   }
 }
 
-export default Reducer;
+export default addReducer;

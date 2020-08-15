@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from '@material-ui/icons/Delete';
-import UserFormDialog from './UserFormDialog';
+import NewUserForm from './NewUserForm';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,14 +26,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function User({
+export default function Product({
   user,
   handleDeleteUser,
   handleChangeInput,
   handleEditUser,
   errors,
   userReset,
-  setUser
+  editingUser
 }) {
   const classes = useStyles();
 
@@ -76,13 +76,13 @@ export default function User({
               justify="center"
               alignItems="center"
             >
-              <UserFormDialog
+              <NewUserForm
                 user={user}
                 handleChangeInput={handleChangeInput}
                 errors={errors}
                 userReset={userReset}
                 handleEditUser={handleEditUser}
-                setUser={setUser}
+                editingUser={editingUser}
               />
               <Button onClick={() => handleDeleteUser(user.id)}>
                 <DeleteIcon />
