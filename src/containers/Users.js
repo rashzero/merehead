@@ -42,7 +42,7 @@ export default function Users() {
   const classes = useStyles();
   const history = useHistory(); 
   const { page } = useParams();
-  const pageNumber = Number(page);
+  const pageNumber = page ? Number(page) : 0;
   const dispatch = useDispatch();
   const startSlice = pageNumber * chunkSize;
   const endSlice = chunkSize + startSlice;
