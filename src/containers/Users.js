@@ -98,9 +98,8 @@ export default function Users() {
   const handleDeleteUser = async (id) => {
     const response = await axios.delete(`http://77.120.241.80:8911/api/user/${id}`);
     if(response.status === 200){
-      return getUsersDispatch();
+      getUsersDispatch();
     }
-    return {};
   };
 
   const userReset = () => {
@@ -127,7 +126,7 @@ export default function Users() {
     axios.put(`http://77.120.241.80:8911/api/user/${id}`, user)
       .then(() => {
         resetErrors();
-        return getUsersDispatch();
+        getUsersDispatch();
       })
       .catch((error)=> {
         setErrors(error.response.data.errors);
@@ -139,7 +138,7 @@ export default function Users() {
       .then(() => {
         userReset();
         resetErrors();
-        return getUsersDispatch();
+        getUsersDispatch();
       })
       .catch((error)=> {
         setErrors(error.response.data.errors);
@@ -185,20 +184,28 @@ export default function Users() {
             aria-label="large outlined secondary button group"
             className={classes.pagination}
           >
-            <Button onClick={backPage} disabled={pageNumber === 0 ? true : false }>
+            <Button
+              onClick={backPage}
+              // is first page
+              disabled={pageNumber === 0}
+            >
               Назад
             </Button>
             {new Array(store.numberOfPage).fill(null).map((value, index) => (
               <Button
                 onClick={() => getUsersPage(index)}
-                style={{ backgroundColor: (pageNumber === +index) ? 'blue' : '' }}
+                style={{ backgroundColor: (pageNumber === index) ? 'blue' : '' }}
                 key={index}
                 value={index}
               >
                 {index + 1}
               </Button>
             ))}
-            <Button onClick={nextPage} disabled={pageNumber + 1 === store.numberOfPage ? true : false }>
+            <Button
+              onClick={nextPage}
+              // is last page
+              disabled={pageNumber + 1 === store.numberOfPage}
+            >
               Вперед
             </Button>
           </ButtonGroup>
