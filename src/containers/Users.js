@@ -39,10 +39,11 @@ const useStyles = makeStyles(theme => ({
 export default function Users() {
   const chunkSize = 5;
   const classes = useStyles();
-  const history = useHistory();
+  const history = useHistory(); 
   const { page } = useParams();
+  const pageNumber = Number(page);
   const dispatch = useDispatch();
-  const startSlice = +page * chunkSize;
+  const startSlice = pageNumber * chunkSize;
   const endSlice = chunkSize + startSlice;
 
   const store = useSelector(state => ({
@@ -63,14 +64,14 @@ export default function Users() {
   });
 
   useEffect(() => {
-    getUsersPage(+page);
-  },[page]);
+    getUsersPage(pageNumber);
+  },[pageNumber]);
 
   const getUsersDispatch = () => {
-    const getUserAsync = () => {
+    const getUsersAsync = () => {
       return dispatch => dispatch(getUsersAction());
     };
-    dispatch(getUserAsync());
+    dispatch(getUsersAsync());
   };
 
   const getUsersPage = async (index) => {
@@ -82,23 +83,23 @@ export default function Users() {
     setIsLoading(false);
   };
 
-  const handleChangeInput = (event, name) => {
+  const handleChangeInput = (event, inputId) => {
     const newUser = { ...user };
-    newUser[name] = event.target.value;
-    setUser(newUser);
+    newUser[inputId] = event.target.value;
+    return setUser(newUser);
   }
 
   const nextPage = () => {
-    history.push(`/page/${+page + 1}`);
+    history.push(`/page/${pageNumber + 1}`);
   }
 
   const backPage = () => {
-    history.push(`/page/${+page - 1}`);
+    history.push(`/page/${pageNumber - 1}`);
   }
 
   const handleDeleteUser = async (id) => {
     await axios.delete(`http://77.120.241.80:8911/api/user/${id}`);
-    getUsersDispatch();
+    return getUsersDispatch();
   }
 
   const userReset = () => {
@@ -115,53 +116,32 @@ export default function Users() {
   }
 
   const editingUser = (user) => {
-    setUser({
-      name: user.name,
-      surname: user.surname,
-      desc: user.desc
-    });
+    setUser(user);
   }
 
   const handleEditUser = async (id) => {
-    const {
-      name, surname, desc,
-    } = user;
-    const formData = {
-      name,
-      surname,
-      desc
-    };
-    await axios.put(`http://77.120.241.80:8911/api/user/${id}`, formData)
-      .then((data) => {
-        if (data.errors) {
-          let newErrors = { ...errors };
-          newErrors = data.errors;
-          setErrors(newErrors);
-        }
-        return data.success;
+    await axios.put(`http://77.120.241.80:8911/api/user/${id}`, user)
+      .then(() => {
+        setErrors({
+          name: '',
+          surname: '',
+          desc: ''
+        });
+        return getUsersDispatch();
+      })
+      .catch((error)=> {
+        setErrors(error.response.data.errors);
       });
-      getUsersDispatch();
   }
 
   const createUser = () => {
-    const formData = new FormData();
-    const id = store.users.length > 0 ? store.users[store.users.length - 1].id++:1;
-    const {
-      name, surname, desc,
-    } = user;
-    formData.append('id', id);
-    formData.append('name', name);
-    formData.append('surname', surname);
-    formData.append('desc', desc);
-    axios.post('http://77.120.241.80:8911/api/users', formData)
-      .then((data) => {
-        if (data.errors) {
-          let newErrors = { ...errors };
-          newErrors = data.errors;
-          setErrors(newErrors);
-          return;
-        }
-      getUsersDispatch();
+    axios.post('http://77.120.241.80:8911/api/users', user)
+      .then(() => {
+        userReset();
+        return getUsersDispatch();
+      })
+      .catch((error)=> {
+        setErrors(error.response.data.errors);
       });
   };
 
@@ -203,20 +183,20 @@ export default function Users() {
             aria-label="large outlined secondary button group"
             className={classes.pagination}
           >
-            <Button onClick={backPage} disabled={+page === 0 ? true : false }>
+            <Button onClick={backPage} disabled={pageNumber === 0 ? true : false }>
               Назад
             </Button>
             {new Array(store.numberOfPage).fill(null).map((value, index) => (
               <Button
                 onClick={() => getUsersPage(index)}
-                style={{ backgroundColor: (+page === +index) ? 'blue' : '' }}
+                style={{ backgroundColor: (pageNumber === +index) ? 'blue' : '' }}
                 key={index}
                 value={index}
               >
                 {index + 1}
               </Button>
             ))}
-            <Button onClick={nextPage} disabled={+page + 1 === store.numberOfPage ? true : false }>
+            <Button onClick={nextPage} disabled={pageNumber + 1 === store.numberOfPage ? true : false }>
               Вперед
             </Button>
           </ButtonGroup>
