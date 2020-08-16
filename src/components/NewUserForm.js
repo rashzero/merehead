@@ -41,6 +41,7 @@ export default function NewUserForm(props) {
 
   const handleClose = () => {
     props.userReset();
+    props.resetErrors();
     setOpen(false);
   };
 

@@ -84,23 +84,24 @@ export default function Users() {
   };
 
   const handleChangeInput = (event, inputId) => {
-    const newUser = { ...user };
-    newUser[inputId] = event.target.value;
-    return setUser(newUser);
-  }
+    setUser({ ...user, [inputId]: event.target.value });
+  };
 
   const nextPage = () => {
     history.push(`/page/${pageNumber + 1}`);
-  }
+  };
 
   const backPage = () => {
     history.push(`/page/${pageNumber - 1}`);
-  }
+  };
 
   const handleDeleteUser = async (id) => {
-    await axios.delete(`http://77.120.241.80:8911/api/user/${id}`);
-    return getUsersDispatch();
-  }
+    const response = await axios.delete(`http://77.120.241.80:8911/api/user/${id}`);
+    if(response.status === 200){
+      return getUsersDispatch();
+    }
+    return {};
+  };
 
   const userReset = () => {
     setUser({
@@ -108,36 +109,36 @@ export default function Users() {
       surname: '',
       desc: ''
     });
+  };
+
+  const resetErrors = () => {
     setErrors({
       name: '',
       surname: '',
       desc: ''
     });
-  }
+  };
 
   const editingUser = (user) => {
     setUser(user);
-  }
+  };
 
-  const handleEditUser = async (id) => {
-    await axios.put(`http://77.120.241.80:8911/api/user/${id}`, user)
+  const handleEditUser = (id) => {
+    axios.put(`http://77.120.241.80:8911/api/user/${id}`, user)
       .then(() => {
-        setErrors({
-          name: '',
-          surname: '',
-          desc: ''
-        });
+        resetErrors();
         return getUsersDispatch();
       })
       .catch((error)=> {
         setErrors(error.response.data.errors);
       });
-  }
+  };
 
   const createUser = () => {
     axios.post('http://77.120.241.80:8911/api/users', user)
       .then(() => {
         userReset();
+        resetErrors();
         return getUsersDispatch();
       })
       .catch((error)=> {
@@ -169,6 +170,7 @@ export default function Users() {
               handleEditUser={handleEditUser}
               errors={errors}
               userReset={userReset}
+              resetErrors={resetErrors}
             />)}
         </Grid>
         <Grid
@@ -207,6 +209,7 @@ export default function Users() {
         createUser={createUser}
         errors={errors}
         userReset={userReset}
+        resetErrors={resetErrors}
         getUsersAction={getUsersDispatch}
       />
     </div>

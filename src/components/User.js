@@ -33,6 +33,7 @@ export default function Product({
   handleEditUser,
   errors,
   userReset,
+  resetErrors,
   editingUser
 }) {
   const classes = useStyles();
@@ -81,6 +82,7 @@ export default function Product({
                 handleChangeInput={handleChangeInput}
                 errors={errors}
                 userReset={userReset}
+                resetErrors={resetErrors}
                 handleEditUser={handleEditUser}
                 editingUser={editingUser}
               />
