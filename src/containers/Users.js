@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import axios from 'axios';
 import ProgressCentered from "../components/ProgressCentered";
 import { getUsersAction } from "../actions";
 import Grid from "@material-ui/core/Grid";
@@ -10,6 +9,7 @@ import NewUserForm from "../components/NewUserForm";
 import User from "../components/User";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -37,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Users() {
+  
   const chunkSize = 5;
   const classes = useStyles();
   const history = useHistory(); 
